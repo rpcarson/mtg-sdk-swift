@@ -9,22 +9,15 @@
 import Foundation
 
 
-
-
-enum JSONResultType: String {
-    case cards
-    case sets
-}
-
-
-
 final class Parser {
     
-     func parseCards(json: JSONResults) -> [Card]? {
+     func parseCards(json: JSONResults) -> [Card] {
         
         guard let cards = json["cards"] as? [[String:Any]] else {
-            print("json cards parse guard fail")
-            return nil
+            if MagicSettings.instance.enableLogging {
+                print("Parser parseCards - unexpected json: returning empty array")
+            }
+            return [Card]()
         }
         
         var cardsArray = [Card]()
@@ -119,11 +112,14 @@ final class Parser {
         return cardsArray
     }
     
-    private func parseSets(json: JSONResults) -> [CardSet]? {
+    
+     func parseSets(json: JSONResults) -> [CardSet] {
         
         guard let cardSets = json["sets"] as? [[String:Any]] else {
-            print("sets parse guard fail")
-            return nil
+            if MagicSettings.instance.enableLogging {
+                print("Parser parseSets - unexpected json: returning empty array")
+            }
+            return [CardSet]()
         }
         
         var sets = [CardSet]()
@@ -134,17 +130,33 @@ final class Parser {
             if let name = s["name"] as? String {
                 set.name = name
             }
-            
-            
-            
+            if let code = s["code"] as? String {
+                set.code = code
+            }
+            if let block = s["block"] as? String {
+                set.block = block
+            }
+            if let type = s["type"] as? String {
+                set.type = type
+            }
+            if let border = s["border"] as? String {
+                set.border = border
+            }
+            if let releaseDate = s["releaseDate"] as? String {
+                set.releaseDate = releaseDate
+            }
+            if let magicCardsInfoCode = s["magicCardsInfoCode"] as? String {
+                set.magicCardsInfoCode = magicCardsInfoCode
+            }
+            if let booster = s["booster"] as? [[String]] {
+                set.booster = booster
+            }
             
             sets.append(set)
         }
-        
         
         return sets
         
     }
 
-    
 }

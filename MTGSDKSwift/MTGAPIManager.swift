@@ -9,59 +9,115 @@
 import Foundation
 
 
+public enum NetworkError: Error {
+    case requestError(Error)
+    case unexpectedHTTPResponse(HTTPURLResponse)
+    case unexpectedResults(Data)
+    case invalidParameters(String)
+    case nilDataResponse
+    case serializationError
+}
+
+
 final public class MagicSettings {
     private init() {}
     static let instance = MagicSettings()
-   public var pageSize: String = "6"
-   public var pageNumber: String = "1"
-   public var errorLogging: Bool = false
+    public var pageSize: String = "6"
+    public var pageNumber: String = "1"
+    public var enableLogging: Bool = true
 }
+
 
 final public class MagicManager {
     
-    public init() {}
+    public typealias CardCompletion = ([Card]?, NetworkError?) -> Void
+    public typealias SetCompletion = ([CardSet]?, NetworkError?) -> Void
     
+    public init() {}
     public let settings = MagicSettings.instance
-  
+    
     private let mtgAPIService = MTGAPIService()
     private let urlManager = URLManager()
     private let parser = Parser()
-    
-    public func fetchCardsWithParameters(_ parameters: [SearchParameter], completion: @escaping ([Card]?) -> Void) throws {
+
+    public func fetchSets(_ parameters: [SearchParameter], completion: @escaping SetCompletion) throws {
         
+        var networkError: NetworkError? {
+            didSet {
+                if settings.enableLogging {
+                    print("fetchSets networkError")
+                }
+                completion(nil, networkError)
+            }
+        }
+        
+        if parameters is [CardSearchParameter] {
+            networkError = NetworkError.invalidParameters("fetchSets: card parameters passed")
+            completion(nil, networkError)
+            return
+        }
         
         urlManager.pageSize = settings.pageSize
         urlManager.page = settings.pageNumber
         
         guard let url = urlManager.buildURL(parameters: parameters) else {
-            print("Magic: bad url")
+            if settings.enableLogging {
+                print("fetchSets bad url")
+            }
             return
         }
         
-        var networkError: NetworkError?
-        
-        mtgAPIService.networkQuery(url: url) {
+        mtgAPIService.mtgAPIQuery(url: url) {
             json, error in
-            
             if error != nil {
                 networkError = error
                 return
             }
-            
-            let cards = self.parser.parseCards(json: json!)
-            
-            completion(cards)
-            
-        }
-        
-        if let error = networkError {
-            throw error
+            let sets = self.parser.parseSets(json: json!)
+            completion(sets, nil)
         }
     }
     
-    
-    
+    public func fetchCards(_ parameters: [SearchParameter], completion: @escaping CardCompletion) {
+        var networkError: NetworkError? {
+            didSet {
+                if settings.enableLogging {
+                    print("fetchCards networkError")
+                }
+                completion(nil, networkError)
+            }
+        }
+        
+        if parameters is [SetSearchParameter] {
+            networkError = NetworkError.invalidParameters("fetchCards: sets parameters passed")
+            completion(nil, networkError)
+            return
+        }
+        
+        urlManager.pageSize = settings.pageSize
+        urlManager.page = settings.pageNumber
+        
+        guard let url = urlManager.buildURL(parameters: parameters) else {
+            if settings.enableLogging {
+                print("fetchCards bad url")
+            }
+            return
+        }
+        
+        mtgAPIService.mtgAPIQuery(url: url) {
+            json, error in
+            if error != nil {
+                networkError = error
+                return
+            }
+            let cards = self.parser.parseCards(json: json!)
+            completion(cards, nil)
+        }
+
+    }
+
 }
+
 
 final class URLManager {
     
@@ -72,11 +128,24 @@ final class URLManager {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "api.magicthegathering.io"
-        urlComponents.path = "/v1/cards"
+        urlComponents.path = {
+            if parameters is [CardSearchParameter] {
+                return "/v1/cards"
+            } else {
+                return "/v1/sets"
+            }
+        }()
+        
         urlComponents.queryItems = buildQueryItemsFromParameters(parameters)
         
+        if MagicSettings.instance.enableLogging == true {
+            if let url = urlComponents.url {
+                 print("URL constructed: \(url)")
+            }
+        }
         
         return urlComponents.url
+        
     }
     
     private func buildQueryItemsFromParameters(_ parameters: [SearchParameter]) -> [URLQueryItem] {
@@ -88,7 +157,7 @@ final class URLManager {
         queryItems.append(pageSizeQuery)
         
         for parameter in parameters {
-            let name = parameter.paramType.rawValue
+            let name = parameter.name
             let value = parameter.value
             let item = URLQueryItem(name: name, value: value)
             queryItems.append(item)
@@ -97,16 +166,6 @@ final class URLManager {
         return queryItems
     }
     
-    
-    
-}
-
-
-public enum NetworkError: Error {
-    case requestError(Error)
-    case unexpectedHTTPResponse(HTTPURLResponse)
-    case unexpectedResults(Data)
-    case unknownError
 }
 
 typealias JSONResults = [String:Any]
@@ -121,13 +180,19 @@ let testURL = URL(string: "https://api.magicthegathering.io/v1/cards?pageSize=20
 
 final private class MTGAPIService {
     
-    func networkQuery(url: URL, completion: @escaping JSONCompletionWithError) {
+    func mtgAPIQuery(url: URL, completion: @escaping JSONCompletionWithError) {
+        
+        if MagicSettings.instance.enableLogging {
+            print("MTGAPIService - beginning mtgAPIQuery... \n")
+        }
         
         let  networkOperation = NetworkOperation(url: url)
         var networkError: NetworkError? {
             didSet {
-                completion(nil, networkError!)
-                return
+                if MagicSettings.instance.enableLogging {
+                    print("MTGAPIService networkQuery error")
+                }
+                completion(nil, networkError)
             }
         }
         
@@ -138,14 +203,10 @@ final private class MTGAPIService {
                 networkError = error
                 return
             }
-            completion(json!, nil)
+            completion(json, nil)
         }
-        
-        if let error = networkError {
-            completion(nil, error)
-        }
+
     }
-    
     
 }
 
@@ -162,10 +223,21 @@ final private class NetworkOperation {
     init(url: URL) {
         self.url = url
     }
-    
+
     func queryURL(completion: @escaping JSONCompletionWithError) {
         
-        var networkError: NetworkError?
+        if MagicSettings.instance.enableLogging {
+            print("NetworkOperation - beginning queryURL... \n")
+        }
+        
+        var networkError: NetworkError? {
+            didSet {
+                if MagicSettings.instance.enableLogging {
+                    print("NetworkOperation queryURL error")
+                }
+                completion(nil, networkError)
+            }
+        }
         
         let request = URLRequest(url: url)
         let dataTask = session.dataTask(with: request) {
@@ -179,73 +251,45 @@ final private class NetworkOperation {
             if let httpResponse = (response as? HTTPURLResponse) {
                 switch httpResponse.statusCode {
                 case 200..<300:
-                    print("HTTPResponse success. code: \(httpResponse.statusCode)")
+                    if MagicSettings.instance.enableLogging {
+                        print("HTTPResponse success - status code: \(httpResponse.statusCode)")
+                    }
                     break
                 default:
+                    if MagicSettings.instance.enableLogging {
+                        print("HTTPResponse unexpected - status code: \(httpResponse.statusCode)")
+                    }
                     networkError = NetworkError.unexpectedHTTPResponse(httpResponse)
                     return
                 }
             }
             
             guard data != nil else {
-                networkError = NetworkError.unknownError
+                if MagicSettings.instance.enableLogging {
+                    print("NetworkOperation queryURL: error - data response is nil")
+                }
+                networkError = NetworkError.nilDataResponse
                 return
             }
             
             
             do {
                 let jsonResponse = try JSONSerialization.jsonObject(with: data!, options: []) as? JSONResults
+               
                 completion(jsonResponse, nil)
+            
             } catch {
-                networkError = NetworkError.unexpectedResults(data!)
+                if MagicSettings.instance.enableLogging {
+                    print("NetworkOperation queryURL - json serialization fail catch block")
+                }
+                networkError = NetworkError.serializationError
                 return
             }
         }
         
         dataTask.resume()
-        
-        if let error = networkError {
-            completion(nil, error)
-        }
-        
+
     }
-    
-    
-    //    func downloadSubtypesData(completion: @escaping (JSONResults) -> Void) {
-    //
-    //        guard let url = URL(string: "https://api.magicthegathering.io/v1/subtypes") else {
-    //            print("MTGAPIService:downloadSetsData - url failed")
-    //            return
-    //        }
-    //
-    //        let networkOperation = NetworkOperation(url: url)
-    //
-    //        networkOperation.retrieveJSON { (results) in
-    //            if let sets = results {
-    //                print("MTGAPIService:downloadSetsData - operation success")
-    //                print(sets)
-    //                completion(sets)
-    //            }
-    //        }
-    //
-    //    }
-    //    func downloadSetsData(completion: @escaping (JSONResults) -> Void) {
-    //
-    //        guard let url = URL(string: "https://api.magicthegathering.io/v1/sets") else {
-    //            print("MTGAPIService:downloadSetsData - url failed")
-    //            return
-    //        }
-    //
-    //        let networkOperation = NetworkOperation(url: url)
-    //
-    //        networkOperation.retrieveJSON { (results) in
-    //            if let sets = results {
-    //                print("MTGAPIService:downloadSetsData - operation success")
-    //                completion(sets)
-    //            }
-    //        }
-    //
-    //    }
     
     
 }

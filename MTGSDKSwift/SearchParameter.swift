@@ -9,10 +9,12 @@
 import Foundation
 
 
+public enum SetQueryParameterType: String {
+    case name
+    case block
+}
 
-
-
-public enum SearchParameterType: String {
+public enum CardQueryParameterType: String {
     case name
     case cmc
     case colors
@@ -30,19 +32,86 @@ public enum SearchParameterType: String {
     
 }
 
-public struct SearchParameter {
-   
-    public let paramType: SearchParameterType
-    
-    public let value: String
-    
-    public init(parameterType: SearchParameterType, value: String) {
-        self.paramType = parameterType
+
+public class SearchParameter {
         
+    public var name: String {
+        return ""
+    }
+    public var value: String = ""
+
+}
+
+
+public class CardSearchParameter: SearchParameter {
+    override public var name: String {
+        return paramType.rawValue
+    }
+   
+    private var paramType: CardQueryParameterType
+    
+    public init(parameterType: CardQueryParameterType, value: String) {
+        self.paramType = parameterType
+        super.init()
+        self.value = value
+                
+            }
+    
+}
+public class SetSearchParameter: SearchParameter {
+    override public var name: String {
+        return paramType.rawValue
+    }
+    
+    private var paramType: SetQueryParameterType
+    
+    public init(parameterType: SetQueryParameterType, value: String) {
+        self.paramType = parameterType
+        super.init()
         self.value = value
         
     }
 }
+
+//public struct SetSearchParameter {
+//    public let paramType: SetQueryParameterType
+//    
+//    public let value: String
+//    
+//    public init(parameterType: SetQueryParameterType, value: String) {
+//        self.paramType = parameterType
+//        
+//        self.value = value
+//        
+//    }
+//}
+//
+//
+
+
+
+//public struct SetSearchParameter {
+//    
+//    public let paramType: SetQueryParameterType
+//    public let value: String
+//    
+//    public init(parameterType: SetQueryParameterType, value: String) {
+//        self.paramType = parameterType
+//        self.value = value
+//        
+//    }
+//}
+//public struct CardSearchParameter {
+//   
+//    public let paramType: CardQueryParameterType
+//    public let value: String
+//    
+//    public init(parameterType: CardQueryParameterType, value: String) {
+//        self.paramType = parameterType
+//        self.value = value
+//        
+//    }
+//}
 
 
 

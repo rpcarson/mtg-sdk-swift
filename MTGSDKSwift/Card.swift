@@ -8,9 +8,7 @@
 
 import Foundation
 
-
-
-
+//TODO - Implement extra card properties
 
 public struct Card {
     
@@ -45,6 +43,8 @@ public struct Card {
     
     public var flavor: String?
     
+    /*
+    
     public var loyalty: Int?
     public var watermark: Any?
     public var reserved: Any?
@@ -52,6 +52,8 @@ public struct Card {
     public var gameFormat: Any?
     public var variations: Any?
     public var releaseDate: Any?
+ 
+ */
     
 
 }

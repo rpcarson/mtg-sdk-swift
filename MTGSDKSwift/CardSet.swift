@@ -9,8 +9,17 @@
 import Foundation
 
 
-
-struct CardSet {
+public struct CardSet {
     
-    var name: String?
+    public var code: String?
+    public var name: String?
+    public var block: String?
+    public var type: String?
+    public var border: String?
+    //public var mkm_id: Int?
+    //public var mkm_name: String?
+    public var releaseDate: String?
+    public var magicCardsInfoCode: String?
+    public var booster: [[String]]?
+    
 }
