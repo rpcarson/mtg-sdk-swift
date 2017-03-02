@@ -14,7 +14,7 @@ final class Parser {
      func parseCards(json: JSONResults) -> [Card] {
         
         guard let cards = json["cards"] as? [[String:Any]] else {
-            if MagicSettings.instance.enableLogging {
+            if Magic.enableLogging {
                 print("Parser parseCards - unexpected json: returning empty array")
             }
             return [Card]()
@@ -116,7 +116,7 @@ final class Parser {
      func parseSets(json: JSONResults) -> [CardSet] {
         
         guard let cardSets = json["sets"] as? [[String:Any]] else {
-            if MagicSettings.instance.enableLogging {
+            if Magic.enableLogging {
                 print("Parser parseSets - unexpected json: returning empty array")
             }
             return [CardSet]()
