@@ -19,7 +19,7 @@ Parameters can be constructed as follows:
 ````swift
 let color = CardSearchParameter(parameterType: .colors, value: "black")
 let cmc = CardSearchParameter(parameterType: .cmc, value: "2")
-let set = CardSearchParameter(parameterType: .set, value: "AER")
+let setCode = CardSearchParameter(parameterType: .set, value: "AER")
 ````
 Search parameters come in two flavors: Card and SetSearchParameter. Each one contains an enum holding the valid query names for either cards or sets.
 
