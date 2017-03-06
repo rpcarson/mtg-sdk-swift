@@ -8,22 +8,9 @@
 
 import Foundation
 
-typealias JSONResults = [String:Any]
-typealias JSONCompletionWithError = ([String:Any]?, NetworkError?) -> Void
 
-
-public enum NetworkError: Error {
-    case requestError(Error)
-    case unexpectedHTTPResponse(HTTPURLResponse)
-    case fetchCardImageError(String)
-    case miscError(String)
-}
-
-
-
-
-
-
+public typealias JSONResults = [String:Any]
+public typealias JSONCompletionWithError = (JSONResults?, NetworkError?) -> Void
 
 
 final class URLManager {
@@ -46,13 +33,11 @@ final class URLManager {
         urlComponents.queryItems = buildQueryItemsFromParameters(parameters)
         
         if Magic.enableLogging == true {
-            if let url = urlComponents.url {
-                print("URL: \(url)")
-            }
+            print("URL: \(urlComponents.url)\n")
         }
         
         return urlComponents.url
-        
+    
     }
     
     private func buildQueryItemsFromParameters(_ parameters: [SearchParameter]) -> [URLQueryItem] {
@@ -86,11 +71,7 @@ final class MTGAPIService {
                 completion(nil, networkError)
             }
         }
-        
-        if Magic.enableLogging {
-            print("MTGAPIService - beginning mtgAPIQuery... \n")
-        }
-        
+
         let networkOperation = NetworkOperation(url: url)
         
         networkOperation.queryURL {

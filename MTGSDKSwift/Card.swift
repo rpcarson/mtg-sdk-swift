@@ -10,7 +10,7 @@ import Foundation
 
 //TODO - Implement extra card properties
 
-public struct Card {
+public struct Card: Equatable {
     
     public init() {}
     
@@ -40,8 +40,11 @@ public struct Card {
     public var originalText: String?
     public var originalType: String?
     public var id: String?
-    
     public var flavor: String?
+    
+    public static func ==(lhs: Card, rhs: Card) -> Bool {
+        return lhs.id == rhs.id 
+    }
     
     /*
     

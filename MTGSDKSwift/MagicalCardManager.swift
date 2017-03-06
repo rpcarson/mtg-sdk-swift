@@ -8,23 +8,13 @@
 
 import UIKit
 
-//final public class MagicSettings {
-//    private init() {}
-//    static let instance = MagicSettings()
-//    public var pageSize: String = "6"
-//    public var pageNumber: String = "1"
-//   // public var enableLogging: Bool = false
-//}
-
 
 final public class Magic {
-    
+    public init() {}
+
     public typealias CardImageCompletion = (UIImage?, NetworkError?) -> Void
     public typealias CardCompletion = ([Card]?, NetworkError?) -> Void
     public typealias SetCompletion = ([CardSet]?, NetworkError?) -> Void
-    
-    public init() {}
-   // public let settings = MagicSettings.instance
     
     public static var enableLogging: Bool = false
     public var fetchPageSize: String = "12"
@@ -39,6 +29,30 @@ final public class Magic {
     }
     private let parser = Parser()
     
+    
+    public func fetchJSON(_ parameters: [SearchParameter], completion: @escaping JSONCompletionWithError) {
+        
+        var networkError: NetworkError? {
+            didSet {
+                completion(nil, networkError)
+            }
+        }
+        
+        guard let url = urlManager.buildURL(parameters: parameters) else {
+            networkError = NetworkError.miscError("fetchJSON url build failed")
+            return
+        }
+        
+        mtgAPIService.mtgAPIQuery(url: url) {
+            json, error in
+            if let error = error {
+                networkError = NetworkError.requestError(error)
+                return
+            }
+            completion(json, nil)
+        }
+        
+    }
     
     
     public func fetchImageForCard(_ card: Card, completion: @escaping CardImageCompletion) {
@@ -76,9 +90,6 @@ final public class Magic {
     public func fetchSets(_ parameters: [SetSearchParameter], completion: @escaping SetCompletion) {
         var networkError: NetworkError? {
             didSet {
-                if Magic.enableLogging {
-                    print("fetchSets networkError")
-                }
                 completion(nil, networkError)
             }
         }
@@ -102,9 +113,6 @@ final public class Magic {
     public func fetchCards(_ parameters: [CardSearchParameter], completion: @escaping CardCompletion) {
         var networkError: NetworkError? {
             didSet {
-                if Magic.enableLogging {
-                    print("fetchCards networkError")
-                }
                 completion(nil, networkError)
             }
         }

@@ -8,6 +8,28 @@
 
 import Foundation
 
+final class ResultsFilter {
+
+    public static func removeDuplicateCardsByName(_ cards: [Card]) -> [Card] {
+        
+        var uniqueNames = [String]()
+        var uniqueCards = [Card]()
+        
+        for c in cards {
+            if let name = c.name {
+                if !uniqueNames.contains(name) {
+                    uniqueCards.append(c)
+                }
+                uniqueNames.append(name)
+            }
+        }
+        
+        return uniqueCards
+        
+    }
+    
+}
+
 
 final class Parser {
     
@@ -109,6 +131,10 @@ final class Parser {
            
         }
         
+        if Magic.enableLogging {
+            print("cards retreived: \(cardsArray.count)")
+        }
+        
         return cardsArray
     }
     
@@ -155,6 +181,9 @@ final class Parser {
             sets.append(set)
         }
         
+        if Magic.enableLogging {
+            print("sets retreived: \(sets.count)")
+        }
         return sets
         
     }

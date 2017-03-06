@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B18A9821E69EB0B0026E648 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18A9811E69EB0B0026E648 /* NetworkError.swift */; };
 		5B6DC20C1E64A01A000DF60C /* CardSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DC20B1E64A01A000DF60C /* CardSet.swift */; };
 		5B6DC20E1E64A1A0000DF60C /* SearchParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DC20D1E64A1A0000DF60C /* SearchParameter.swift */; };
 		5BC6D7EE1E67B7A00090650A /* MagicalCardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D7ED1E67B7A00090650A /* MagicalCardManager.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5B18A9811E69EB0B0026E648 /* NetworkError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		5B6DC20B1E64A01A000DF60C /* CardSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardSet.swift; sourceTree = "<group>"; };
 		5B6DC20D1E64A1A0000DF60C /* SearchParameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchParameter.swift; sourceTree = "<group>"; };
 		5BC6D7ED1E67B7A00090650A /* MagicalCardManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MagicalCardManager.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 				5BD04DC41E64945800E5ED27 /* MTGAPIManager.swift */,
 				5BD04DC71E64958800E5ED27 /* Parser.swift */,
 				5BC6D7ED1E67B7A00090650A /* MagicalCardManager.swift */,
+				5B18A9811E69EB0B0026E648 /* NetworkError.swift */,
 			);
 			path = MTGSDKSwift;
 			sourceTree = "<group>";
@@ -217,6 +220,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5BC6D7EE1E67B7A00090650A /* MagicalCardManager.swift in Sources */,
+				5B18A9821E69EB0B0026E648 /* NetworkError.swift in Sources */,
 				5BD04DC51E64945800E5ED27 /* Card.swift in Sources */,
 				5BD04DC61E64945800E5ED27 /* MTGAPIManager.swift in Sources */,
 				5B6DC20E1E64A1A0000DF60C /* SearchParameter.swift in Sources */,
