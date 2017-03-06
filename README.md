@@ -13,7 +13,7 @@ You can
 fetchCards(_:completion:)
 fetchSets(_:completion:)
 fetchJSON(_:completion:)
-fetchImageForCard(:completion:)
+fetchImageForCard(_:completion:)
 ````
 #####First: Configure your search parameters
 Parameters can be constructed as follows:
