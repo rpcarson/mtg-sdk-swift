@@ -2,16 +2,17 @@
 ####Magic: The Gathering SDK - Swift
 #####A lightweight framework that makes interacting with the magicthegathering.io api quick, easy and safe. 
 
-##!!all info currently subject to change!!
+##!!some info currently subject to change!!
 
 ````swift
 let magic = Magic()
 ````
 You can 
 
-````
+````swift
 fetchCards(_:completion:)
 fetchSets(_:completion:)
+fetchJSON(_:completion:)
 fetchImageForCard(:completion:)
 ````
 #####First: Configure your search parameters
@@ -20,7 +21,7 @@ Parameters can be constructed as follows:
 ````swift
 let color = CardSearchParameter(parameterType: .colors, value: "black")
 let cmc = CardSearchParameter(parameterType: .cmc, value: "2")
-let set = CardSearchParameter(parameterType: .set, value: "AER")
+let setCode = CardSearchParameter(parameterType: .set, value: "AER")
 ````
 
 Search parameters come in two flavors: Card and SetSearchParameter. Each one contains an enum holding the valid query names for either cards or sets searches.
@@ -28,7 +29,7 @@ Search parameters come in two flavors: Card and SetSearchParameter. Each one con
 Desired search paramters are grouped into an array and passed to the fetch method.
 
 ````swift
-magic.fetchCards(withParameters: [color,cmc,set]) {
+magic.fetchCards(withParameters: [color,cmc,setCode]) {
 	cards, error in
 	
 	if let error = error {
@@ -57,6 +58,8 @@ Additionally, some helpful console messages such as the URL string that is being
 ````swift
 Magic.enableLogging = true
 ````
+#####Fetching unparsed json
+fetchJSON(_:completion:) can be used to get the unparsed json in case you want to do something specific with it.
 
 #####Fetching The Card Image
 
@@ -93,7 +96,9 @@ public var originalType: String?
 public var id: String?
 public var flavor: String?
 ````
-Not all properties exist for all cards. 
+Not all properties will exist for all mtg cards.
+
+The ID property is a unique identifier given to all cards and is useful for conforming Card to Equatable for example. Card names are not reliable for use as identifiers: There will be multiple "Serra Angel"s for example, one from each printing. 
 
 ####class CardSet
 ````swift
