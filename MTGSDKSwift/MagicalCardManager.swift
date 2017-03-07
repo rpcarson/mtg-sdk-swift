@@ -166,6 +166,14 @@ final public class Magic {
         
     }
     
+    /**
+     This function simulates opening a booster pack for the given set, producing an array of [Card]
+     
+     - parameter setCode: String: the set code of the desired set
+     - parameter completion: ([Card]?, NetworkError?) -> Void
+ 
+    */
+    
     public func generateBooster(_ setCode: String, completion: @escaping CardCompletion) {
         var networkError: NetworkError? {
             didSet {

@@ -14,6 +14,7 @@ fetchCards(_:completion:)
 fetchSets(_:completion:)
 fetchJSON(_:completion:)
 fetchImageForCard(:completion:)
+generateBooster(_:completion:)
 ````
 #####First: Configure your search parameters
 Parameters can be constructed as follows:
@@ -64,6 +65,10 @@ fetchJSON(_:completion:) can be used to get the unparsed json in case you want t
 #####Fetching The Card Image
 
 fetchImageForCard works similarly to fetchCards, and will retreive the card image of the card you pass to it, if one is available. Some promo and special cards do not contain imageURL data. NetworkError will communicate this if true. 
+
+#####Simulating a Booster
+
+generateBooster(_:completion:) will return an array of [Card] which simulates what one might find opening a physical booster.
 
 
 ####class - Card
