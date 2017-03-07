@@ -13,7 +13,7 @@ You can
 fetchCards(_:completion:)
 fetchSets(_:completion:)
 fetchJSON(_:completion:)
-fetchImageForCard(_:completion:)
+fetchImageForCard(:completion:)
 ````
 #####First: Configure your search parameters
 Parameters can be constructed as follows:
@@ -98,7 +98,13 @@ public var flavor: String?
 ````
 Not all properties will exist for all mtg cards.
 
-The ID property is a unique identifier given to all cards and is useful for conforming Card to Equatable for example. Card names are not reliable for use as identifiers: There will be multiple "Serra Angel"s for example, one from each printing. 
+The ID property is a unique identifier given to all cards and is useful for conforming Card to Equatable for example. Card names are not reliable for use as identifiers: There will be multiple "Serra Angel"s for example, one from each printing, but each one will have a unique ID.
+
+The following function is provided for convienence in order to filter duplicate cards out of an array of [Card], if you have results containing the same card in multiple printings. 
+
+````swift
+FilterResults.removeDuplicateCardsByName(_:) -> [Card]
+````
 
 ####class CardSet
 ````swift
