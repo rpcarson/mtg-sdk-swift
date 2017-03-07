@@ -113,8 +113,8 @@ final class Parser {
             if let multiverseid = c["multiverseid"] as? Int {
                 card.multiverseid = multiverseid
             }
-            if let imageURL = c["imageURL"] as? String {
-                card.imageURL = imageURL
+            if let imageUrl = c["imageUrl"] as? String {
+                card.imageUrl = imageUrl
             }
             if let rulings = c["rulings"] as? [[String:String]] {
                 card.rulings = rulings

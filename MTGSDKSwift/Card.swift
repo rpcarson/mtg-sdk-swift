@@ -33,7 +33,7 @@ public struct Card: Equatable {
     public var toughness: String?
     public var layout: String?
     public var multiverseid: Int?
-    public var imageURL: String?
+    public var imageUrl: String?
     public var rulings: [[String:String]]?
     public var foreignNames: [[String:String]]?
     public var printings: [String]?

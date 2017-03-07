@@ -79,7 +79,7 @@ final public class Magic {
             }
         }
         
-        guard let imgurl = card.imageURL else {
+        guard let imgurl = card.imageUrl else {
             networkError = NetworkError.fetchCardImageError("fetchImageForCard card imageURL was nil")
             return
         }
@@ -162,6 +162,36 @@ final public class Magic {
             }
         } else {
             networkError = NetworkError.miscError("fetchCards url build failed")
+        }
+        
+    }
+    
+    public func generateBooster(_ setCode: String, completion: @escaping CardCompletion) {
+        var networkError: NetworkError? {
+            didSet {
+                completion(nil, networkError)
+            }
+        }
+        
+        let endpoint = "https://api.magicthegathering.io/v1/sets/"
+        let fullURLString = endpoint + setCode + "/booster"
+        
+        guard let url = URL(string: fullURLString) else {
+            networkError = NetworkError.miscError("generateBooster - build url fail")
+            return
+        }
+        
+        mtgAPIService.mtgAPIQuery(url: url) {
+            json, error in
+            
+            if let error = error {
+                networkError = error
+                return
+            }
+            
+            let cards = self.parser.parseCards(json: json!)
+            completion(cards, nil)
+            
         }
         
     }

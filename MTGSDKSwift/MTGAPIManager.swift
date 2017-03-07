@@ -18,6 +18,7 @@ final class URLManager {
     var pageSize = "6"
     var pageTotal = "1"
     
+    
     func buildURL(parameters: [SearchParameter]) -> URL? {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
