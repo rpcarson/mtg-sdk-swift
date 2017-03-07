@@ -29,7 +29,14 @@ final public class Magic {
     }
     private let parser = Parser()
     
-    
+    /**
+     Fetch JSON returns the raw json data rather than an Array of Card or CardSet. It will return json for sets or cards depending on what you feed it
+     
+     
+     - parameter parameters: either [CardSearchParameter] or [SetSearchParameter]
+      - parameter completion: ([String:Any]?, NetworkError?) -> Void
+     
+    */
     public func fetchJSON(_ parameters: [SearchParameter], completion: @escaping JSONCompletionWithError) {
         
         var networkError: NetworkError? {
@@ -53,6 +60,16 @@ final public class Magic {
         }
         
     }
+    
+    
+    /**
+     Retreives a UIImage based on the imageURL of the Card passed in
+     
+     
+     - parameter card: Card
+     - parameter completion: (UIImage?, NetworkError?) -> Void
+     
+     */
     
     
     public func fetchImageForCard(_ card: Card, completion: @escaping CardImageCompletion) {
@@ -85,7 +102,14 @@ final public class Magic {
         }
         
     }
-    
+    /**
+     Reteives an array of CardSet which matches the parameters given
+     
+     - parameter parameters: [SetSearchParameter]
+     - parameter completion: ([CardSet]?, NetworkError?) -> Void
+     
+     
+    */
     
     public func fetchSets(_ parameters: [SetSearchParameter], completion: @escaping SetCompletion) {
         var networkError: NetworkError? {
@@ -109,6 +133,15 @@ final public class Magic {
         }
         
     }
+    
+    /**
+     Reteives an array of Cards which match the parameters given
+     
+     - parameter parameters: [CardSearchParameter]
+     - parameter completion: ([Card]?, NetworkError?) -> Void
+     
+     
+     */
     
     public func fetchCards(_ parameters: [CardSearchParameter], completion: @escaping CardCompletion) {
         var networkError: NetworkError? {

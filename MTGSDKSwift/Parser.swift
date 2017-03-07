@@ -9,6 +9,14 @@
 import Foundation
 
 final class ResultsFilter {
+    
+    /**
+     If an array of Card contains cards with identical names, likely due to multiple printings, this function leaves only one version of that card. You will only have one "Scathe Zombies" instead of 5 "Scathe Zombie", the only difference between them being the set they were printed in.
+     
+     
+     - parameter cards: [Card]
+     - returns: [Card] consisting of Cards without duplicate names
+ */
 
     public static func removeDuplicateCardsByName(_ cards: [Card]) -> [Card] {
         
