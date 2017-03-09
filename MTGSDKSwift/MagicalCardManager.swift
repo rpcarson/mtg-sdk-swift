@@ -174,7 +174,7 @@ final public class Magic {
  
     */
     
-    public func generateBooster(_ setCode: String, completion: @escaping CardCompletion) {
+    public func generateBoosterForSet(_ setCode: String, completion: @escaping CardCompletion) {
         var networkError: NetworkError? {
             didSet {
                 completion(nil, networkError)
