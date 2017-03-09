@@ -3,11 +3,11 @@
 #####A lightweight framework that makes interacting with the magicthegathering.io api quick, easy and safe. 
 ###!!some info currently subject to change!!
 
-####~~~~~Installation~~~~~
+####Installation
 Im looking into making a cocoapod and making the project compatible with Carthage. Meanwhile, since it's a small framework the most straightforward way to install is just to download the project and drag the framework file into your project, and make sure to add it to embedded binaries as well. 
 
 
-####~~~~Use~~~~
+####Use
 
 ````swift
 import MTGSDKSwift
